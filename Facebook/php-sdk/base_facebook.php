@@ -673,6 +673,12 @@ abstract class BaseFacebook
       return false;
     }
 
+    // error check
+    $json_access_token = json_decode($access_token_response, true);
+    if ($json_access_token['error']['type'] == 'OAuthException') {
+      $this->throwAPIException($json_access_token);
+    }
+
     if (empty($access_token_response)) {
       return false;
     }
@@ -1050,6 +1056,15 @@ abstract class BaseFacebook
         $this->setAccessToken(null);
         $this->user = 0;
         $this->clearAllPersistentData();
+      } else if ((strpos($message, 'Code was invalid or expired') !== false)) {
+      	// session clear
+        $this->destroySession();
+
+        // cookie crear
+        setcookie($this->getSignedRequestCookieName(), '', time() - 3600);
+
+        // FIXME: need to delete on real time ?
+        // unset($_COOKIE[$this->getSignedRequestCookieName()]);
       }
     }
 
