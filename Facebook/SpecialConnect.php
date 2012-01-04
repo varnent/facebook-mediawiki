@@ -153,13 +153,6 @@ class SpecialConnect extends SpecialPage {
 	public function execute( $par ) {
 		global $wgUser, $wgRequest;
 		
-		/*
-		if ( $wgRequest->getVal('action', '') == 'disconnect_reclamation' ) {
-			$this->sendPage('disconnectReclamationActionView');
-			return;
-		}
-		*/
-		
 		// Setup the session
 		global $wgSessionStarted;
 		if (!$wgSessionStarted) {
@@ -790,48 +783,6 @@ class SpecialConnect extends SpecialPage {
 		wfProfileOut(__METHOD__);
 	}
 	
-	
-	
-	
-	/**
-	 * Disconnect from Facebook.
-	 *
-	private function disconnectReclamationActionView() {
-		global $wgRequest, $wgOut, $facebook;
-	
-		$wgOut->setArticleRelated( false );
-		$wgOut->enableClientCache( false );
-		$wgOut->mRedirect = '';
-		$wgOut->mBodytext = '';
-		$wgOut->setRobotPolicy( 'noindex,nofollow' );
-	
-		$fb_user_id = $wgRequest->getVal('u', 0);
-		$hash = $wgRequest->getVal('h', '');
-		$user_id = $facebook->verifyAccountReclamation($fb_user_id, $hash);
-	
-		if (!($user_id === false)) {
-			$result = FacebookInit::coreDisconnectFromFB($user_id);
-		}
-	
-		$title = Title::makeTitle( NS_SPECIAL, 'Signup' );
-	
-		$html = Xml::openElement('a', array( 'href' => $title->getFullUrl() ));
-		$html .= $title->getPrefixedText();
-		$html .= Xml::closeElement( 'a' );
-	
-		if ( (!($user_id === false)) && ($result['status'] == 'ok') ) {
-			$wgOut->setPageTitle( wfMsg('facebook-reclamation-title') );
-			$wgOut->setHTMLTitle( wfMsg('facebook-reclamation-title') );
-			$wgOut->addHTML( wfMsg('facebook-reclamation-body', array('$1' => $html) ));
-	
-		} else {
-			$wgOut->setPageTitle( wfMsg('facebook-reclamation-title-error') );
-			$wgOut->setHTMLTitle( wfMsg('facebook-reclamation-title-error') );
-			$wgOut->addHTML( wfMsg('facebook-reclamation-body-error', array('$1' => $html) ));
-		}
-	
-		return true;
-	}
 	
 	/**
 	 * This is called when a user is logged into a Wikia account and has just gone through the Facebook Connect popups,

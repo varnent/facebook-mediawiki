@@ -95,7 +95,6 @@ $wgAutoloadClasses['ChooseNameTemplate'] = $dir . 'templates/ChooseNameTemplate.
 
 $wgSpecialPages['Connect'] = 'SpecialConnect';
 
-//$wgAjaxExportList[] = 'FacebookInit::disconnectFromFB';
 //$wgAjaxExportList[] = 'SpecialConnect::getLoginButtonModal';
 //$wgAjaxExportList[] = 'SpecialConnect::ajaxModalChooseName'; 
 //$wgAjaxExportList[] = 'SpecialConnect::checkCreateAccount';

@@ -188,7 +188,6 @@ STYLE;
 	 * fbAppId		 The application ID (see $wgFbAppId in config.php)
 	 * fbUseXFBML    Should XFBML tags be rendered (see $wgFbSocialPlugins in config.default.php)
 	 * fbLogo        Facebook logo (see $wgFbLogo in config.php)
-	 * fbLogoutURL   The URL to be redirected to on a disconnect
 	 * 
 	 * This hook was added in MediaWiki version 1.14. See:
 	 * http://svn.wikimedia.org/viewvc/mediawiki/trunk/phase3/includes/Skin.php?view=log&pathrev=38397
@@ -579,66 +578,6 @@ STYLE;
 			if ( $fbUser->getMWUser()->getName() == $old_name ) {
 				$facebook->destroySession();
 			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Create a disconnect button and other things in preferences.
-	 */
-	static function initPreferencesExtensionForm( $user, &$preferences ) {
-		global $wgOut, $wgJsMimeType, $wgExtensionsPath, $wgStyleVersion, $wgBlankImgUrl;
-		$wgOut->addScript("<script type=\"{$wgJsMimeType}\" src=\"{$wgExtensionsPath}/Facebook/prefs.js?{$wgStyleVersion}\"></script>\n");
-		wfLoadExtensionMessages('Facebook');
-		$prefsection = 'facebook-prefstext';
-		
-		$id = FacebookDB::getFacebookIDs($user, DB_MASTER);
-		if( count($id) > 0 ) {
-			$html = Xml::openElement("div",array("id" => "fbDisconnectLink" ));
-				$html .= wfMsg('facebook-disconnect-link');
-			$html .= Xml::closeElement( "div" );
-			
-			$html .= Xml::openElement("div",array("style" => "display:none","id" => "fbDisconnectProgress" ));
-				$html .= wfMsg('facebook-disconnect-done');
-				$html .= Xml::openElement("img",array("id" => "fbDisconnectProgressImg", 'src' => $wgBlankImgUrl, "class" => "sprite progress" ),true);
-			$html .= Xml::closeElement( "div" );
-			
-			$html .= Xml::openElement("div",array("style" => "display:none","id" => "fbDisconnectDone" ));
-				$html .= wfMsg('facebook-disconnect-info');
-			$html .= Xml::closeElement( "div" );
-			
-			$preferences['facebook-prefstext'] = array(
-				'label' => '',
-				'type' => 'info',
-				'section' => 'facebook-prefstext/facebook-event-prefstext',
-			);
-			
-			$preferences['tog-facebook-push-allow-never'] = array(
-				'name' => 'toggle',
-				'label-message' => 'facebook-push-allow-never',
-				'section' => 'facebook-prefstext/facebook-event-prefstext',
-			);
-			
-			$preferences['facebook-connect'] = array(
-				'help' => $html,
-				'label' => '',
-				'type' => 'info',
-				'section' => 'facebook-prefstext/facebook-event-prefstext',
-			);
-			
-		} else {
-			// User is a MediaWiki user but isn't connected yet
-			// Display a message and button to connect
-			$loginButton = '<fb:login-button id="fbPrefsConnect" ' .
-			               FacebookInit::getPermissionsAttribute() . '></fb:login-button>';
-			$html = wfMsg('facebook-convert') . '<br/>' . $loginButton;
-			$html .= "<!-- Convert button -->\n";
-			$preferences['facebook-disconnect'] = array(
-				'help' => $html,
-				'label' => '',
-				'type' => 'info',
-				'section' => 'facebook-prefstext/facebook-event-prefstext',
-			);
 		}
 		return true;
 	}
