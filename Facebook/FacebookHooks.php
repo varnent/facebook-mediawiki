@@ -25,29 +25,6 @@
  * because only public static methods are added as hooks.
  */
 class FacebookHooks {
-	/**
-	 * Hook is called whenever an article is being viewed... Currently, figures
-	 * out the Facebook ID of the user that the userpage belongs to.
-	 */
-	public static function ArticleViewHeader( &$article, &$outputDone, &$pcache ) {
-		// Get the article title
-		$nt = $article->getTitle();
-		// If the page being viewed is a user page
-		if ($nt && $nt->getNamespace() == NS_USER && strpos($nt->getText(), '/') === false) {
-			$user = User::newFromName($nt->getText());
-			if (!$user || $user->getID() == 0) {
-				return true;
-			}
-			$fb_ids = FacebookDB::getFacebookIDs($user->getId());
-			if ( !count($fb_ids) ) {
-				return true;
-			}
-			$fb_id = $fb_ids[0]; // possibly multiple Facebook accounts associated with this user
-			// TODO: Something with the Facebook ID stored in $fb_id
-			return true;
-		}
-		return true;
-	}
 	
 	/**
 	 * Injects some important CSS and Javascript into the <head> of the page.
@@ -276,46 +253,6 @@ STYLE;
 	}
 	
 	/**
-	 * Modify the preferences form. At the moment, we simply turn the user name
-	 * into a link to the user's facebook profile.
-	 * 
-	 * TODO!
-	 */
-	public static function RenderPreferencesForm( $form, $output ) {
-		//global $facebook, $wgUser;
-		
-		// This hook no longer seems to work...
-		
-		/*
-		$ids = FacebookDB::getFacebookIDs($wgUser);
-		
-		$fb_user = $facebook->getUser();
-		if( $fb_user && count($ids) > 0 && in_array( $fb_user, $ids )) {
-			$html = $output->getHTML();
-			$name = $wgUser->getName();
-			$i = strpos( $html, $name );
-			if ($i !== FALSE) {
-				// If the user has a valid Facebook ID, link to the Facebook profile
-				try {
-					$fbUser = $facebook->api('/me');
-					// Replace the old output with the new output
-					$html = substr( $html, 0, $i ) .
-					        preg_replace("/$name/", "$name (<a href=\"$fbUser[link]\" " .
-					                     "class='mw-userlink mw-facebookuser'>" .
-					                     wfMsg('facebook-link-to-profile') . "</a>)",
-					                     substr( $html, $i ), 1);
-					$output->clearHTML();
-					$output->addHTML( $html );
-				} catch (FacebookApiException $e) {
-					error_log($e);
-				}
-			}
-		}
-		/**/
-		return true;
-	}
-
-	/**
 	 * Adds the class "mw-userlink" to links belonging to Connect accounts on
 	 * the page Special:ListUsers.
 	 */
@@ -396,43 +333,5 @@ STYLE;
 		}
 		$result = true;
 		return false; // to override internal check
-	}
-	
-	/**
-	 * Add Facebook HTML to AJAX script.
-	 */
-	public static function afterAjaxLoginHTML( &$html ) {
-		$tmpl = new EasyTemplate( dirname( __FILE__ ) . '/templates/' );
-		wfLoadExtensionMessages('Facebook');
-		if ( !LoginForm::getLoginToken() ) {
-			LoginForm::setLoginToken();
-		}
-		$tmpl->set( 'loginToken', LoginForm::getLoginToken() );
-		$tmpl->set( 'fbButtton', FacebookInit::getFBButton( 'sendToConnectOnLoginForSpecificForm();', 'fbPrefsConnect' ) );
-		$html = $tmpl->execute( 'ajaxLoginMerge' );
-		return true;
-	}
-	
-	// TODO
-	public static function SkinTemplatePageBeforeUserMsg(&$msg) {
-		global $wgRequest, $wgUser, $wgServer, $facebook;
-		wfLoadExtensionMessages('Facebook');
-		$pref = Title::newFromText('Preferences', NS_SPECIAL);
-		if ($wgRequest->getVal('fbconnected', '') == 1) {
-			$id = FacebookDB::getFacebookIDs($wgUser, DB_MASTER);
-			if( count($id) > 0 ) {
-				// TODO
-				$msg =  Xml::element("img", array("id" => "fbMsgImage", "src" => $wgServer.'/skins/common/fbconnect/fbiconbig.png' ));
-				$msg .= "<p>".wfMsg('facebook-connect-msg', array("$1" => $pref->getFullUrl() ))."</p>";
-			}
-		}
-		// TODO
-		if ($wgRequest->getVal('fbconnected', '') == 2) {
-			if( strlen($facebook->getUser()) < 1 ) {
-				$msg =  Xml::element("img", array("id" => "fbMsgImage", "src" => $wgServer.'/skins/common/fbconnect/fbiconbig.png' ));
-				$msg .= "<p>".wfMsgExt('facebook-connect-error-msg', 'parse', array("$1" => $pref->getFullUrl() ))."</p>";
-			}
-		}
-		return true;
 	}
 }

@@ -78,7 +78,6 @@ require_once $dir . 'php-sdk/facebook.php';
 $wgExtensionFunctions[] = 'FacebookInit::init';
 
 $wgExtensionMessagesFiles['Facebook'] = $dir . 'Facebook.i18n.php';
-$wgExtensionMessagesFiles['FBPushEvents'] = $dir . 'pushEvents/FBPushEvents.i18n.php';
 $wgExtensionMessagesFiles['FacebookLanguage'] = $dir . 'FacebookLanguage.i18n.php';
 $wgExtensionAliasesFiles['Facebook'] = $dir . 'Facebook.alias.php';
 
@@ -87,11 +86,9 @@ $wgAutoloadClasses['FacebookDB'] = $dir . 'FacebookDB.php';
 $wgAutoloadClasses['FacebookHooks'] = $dir . 'FacebookHooks.php';
 $wgAutoloadClasses['FacebookInit'] = $dir . 'FacebookInit.php';
 $wgAutoloadClasses['FacebookLanguage'] = $dir . 'FacebookLanguage.php';
-$wgAutoloadClasses['FacebookProfilePic'] = $dir . 'FacebookProfilePic.php';
 $wgAutoloadClasses['FacebookUser'] = $dir . 'FacebookUser.php';
 $wgAutoloadClasses['FacebookXFBML'] = $dir . 'FacebookXFBML.php';
 $wgAutoloadClasses['SpecialConnect'] = $dir . 'SpecialConnect.php';
-$wgAutoloadClasses['ChooseNameTemplate'] = $dir . 'templates/ChooseNameTemplate.class.php';
 
 $wgSpecialPages['Connect'] = 'SpecialConnect';
 
