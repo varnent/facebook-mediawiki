@@ -38,7 +38,6 @@ Offers optional authentification based on Facebook groups and the use of FBML in
 	'facebook-convert'  => 'Connect this account with Facebook',
 	'facebook-logout'   => 'Logout of Facebook',
 	'facebook-link'     => 'Back to facebook.com',
-	'facebook-or'       => 'OR',
 	'facebook-log-in'   => 'Log In',
 
 	// Special:Connect
@@ -183,7 +182,6 @@ If you would like to connect your current account to that Facebook profile, plea
 $messages['qqq'] = array(
 	'facebook-desc' => 'Short description of the Facebook extension, shown in [[Special:Version]]. Do not translate or change links.',
 	'facebook-listusers-header' => '$1 is the name of the Bureaucrat group, $2 is the name of the Sysop group.',
-	'facebook-or' => 'This is just the word "OR" in English, used to separate the Facebook login option from the normal login options on the ajaxed login dialog box.',
 	'facebook-email' => '{{Identical|E-mail address}}',
 	'facebook-language' => '{{Identical|Language}}',
 	'facebook-choosepassword' => '{{Identical|Password}}',
