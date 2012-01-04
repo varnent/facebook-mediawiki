@@ -29,19 +29,6 @@ $wgFbSecret         = 'YOUR_SECRET';    # Change this!
 //$wgFbPageId       = 'YOUR_PAGE_ID';   # Optional
 
 /**
- * Turns the wiki into a Facebook-only wiki. This setting has three side-effects:
- *    1.  All users are stripped of the 'createaccount' right. To override this
- *        behavior, see FacebookHooks::UserGetRights.
- *    2.  Special:Userlogin and Special:CreateAccount redirect to Special:Connect
- *    3.  The "Log in / create account" links in the personal toolbar are removed.
- * 
- * If you have a Facebook-only wiki, you probably want to hide IP addresses. This
- * can be done by setting $wgShowIPinHeader to false in LocalSettings.php. For more
- * information, see <http://www.mediawiki.org/wiki/Manual:$wgShowIPinHeader>.
- */
-$wgFbDisableLogin = false;
-
-/**
  * Allow the use of social plugins in wiki text. To learn more about social
  * plugins, please see <https://developers.facebook.com/docs/plugins>.
  * 

@@ -259,7 +259,7 @@ STYLE;
 	 * Modify the user's persinal toolbar (in the upper right).
 	 */
 	public static function PersonalUrls( &$personal_urls, &$wgTitle ) {
-		global $wgUser, $wgFbDisableLogin;
+		global $wgUser;
 		
 		wfLoadExtensionMessages('Facebook');
 		
@@ -271,15 +271,6 @@ STYLE;
 				'class' => 'mw-facebook-logo',
 				'active' => $wgTitle->isSpecial('Connect'),
 			);
-		}
-		
-		if ( !empty( $wgFbDisableLogin ) ) {
-			// Remove other personal toolbar links
-			foreach (array('login', 'anonlogin') as $k) {
-				if (array_key_exists($k, $personal_urls)) {
-					unset($personal_urls[$k]);
-				}
-			}
 		}
 		return true;
 	}
@@ -352,31 +343,6 @@ STYLE;
 	}
 	
 	/**
-	 * Removes Special:UserLogin and Special:CreateAccount from the list of
-	 * special pages if $wgFbDisableLogin is set to true.
-	 */
-	static function SpecialPage_initList( &$aSpecialPages ) {
-		global $wgFbDisableLogin;
-		if ( !empty( $wgFbDisableLogin) ) {
-			// U can't touch this
-			$aSpecialPages['Userlogin'] = array(
-				'SpecialRedirectToSpecial',
-				'UserLogin',
-				'Connect',
-				false,
-				array( 'returnto', 'returntoquery' ),
-			);
-			// Used in 1.12.x and above
-			$aSpecialPages['CreateAccount'] = array(
-				'SpecialRedirectToSpecial',
-				'CreateAccount',
-				'Connect',
-			);
-		}
-		return true;
-	}
-	
-	/**
 	 * HACK: Please someone fix me or explain why this is necessary!
 	 * 
 	 * Unstub $wgUser to avoid race conditions and stop returning stupid false
@@ -430,29 +396,6 @@ STYLE;
 		}
 		$result = true;
 		return false; // to override internal check
-	}
-	
-	/**
-	 * Removes the 'createaccount' right from all users if $wgFbDisableLogin is
-	 * enabled.
-	 */
-	// r270: fix for php 5.3 (cherry picked from http://trac.wikia-code.com/changeset/24606)
-	static function UserGetRights( /*&*/$user, &$aRights ) {
-		global $wgFbDisableLogin;
-		if ( !empty( $wgFbDisableLogin ) ) {
-			// If you would like sysops to still be able to create accounts
-			$whitelistSysops = false;
-			if ($whitelistSysops && in_array( 'sysop', $user->getGroups() )) {
-				return true;
-			}
-			foreach ( $aRights as $i => $right ) {
-				if ( $right == 'createaccount' ) {
-					unset( $aRights[$i] );
-					break;
-				}
-			}
-		}
-		return true;
 	}
 	
 	/**

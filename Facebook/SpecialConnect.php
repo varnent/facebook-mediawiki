@@ -417,7 +417,7 @@ class SpecialConnect extends SpecialPage {
 	 * is new to MediaWiki.
 	 */
 	private function connectNewUserView($messagekey = 'facebook-chooseinstructions') {
-		global $wgUser, $wgOut, $wgFbDisableLogin;
+		global $wgUser, $wgOut;
 		
 		$titleObj = SpecialPage::getTitleFor( 'Connect' );
 		if ( wfReadOnly() ) {
@@ -425,21 +425,17 @@ class SpecialConnect extends SpecialPage {
 			$wgOut->readOnlyPage();
 			return;
 		}
-		if ( empty( $wgFbDisableLogin ) ) {
-			// These two permissions don't apply in $wgFbDisableLogin mode because
-			// then technically no users can create accounts
-			if ( $wgUser->isBlockedFromCreateAccount() ) {
-				wfDebug("Facebook: Blocked user was attempting to create account via Facebook Connect.\n");
-				// This is not an explicitly static method but doesn't use $this and can be called like static
-				LoginForm::userBlockedMessage();
+		if ( $wgUser->isBlockedFromCreateAccount() ) {
+			wfDebug("Facebook: Blocked user was attempting to create account via Facebook Connect.\n");
+			// This is not an explicitly static method but doesn't use $this and can be called like static
+			LoginForm::userBlockedMessage();
+			return;
+		} else {
+			$permErrors = $titleObj->getUserPermissionsErrors('createaccount', $wgUser, true);
+			if (count( $permErrors ) > 0) {
+				// Special case for permission errors
+				$this->sendError($permErrors, 'createaccount');
 				return;
-			} else {
-				$permErrors = $titleObj->getUserPermissionsErrors('createaccount', $wgUser, true);
-				if (count( $permErrors ) > 0) {
-					// Special case for permission errors
-					$this->sendError($permErrors, 'createaccount');
-					return;
-				}
 			}
 		}
 		
@@ -468,33 +464,30 @@ class SpecialConnect extends SpecialPage {
 	<fieldset id="mw-facebook-choosename">
 		<legend>' . wfMsg('facebook-chooselegend') . '</legend>
 		<table>';
-		// Let them attach to an existing. If $wgFbDisableLogin is true, then
-		// stand-alone account aren't allowed in the first place
-		if (empty( $wgFbDisableLogin )) {
-			// Grab the UserName from the cookie if it exists
-			global $wgCookiePrefix;
-			$name = isset($_COOKIE["{$wgCookiePrefix}UserName"]) ? trim($_COOKIE["{$wgCookiePrefix}UserName"]) : '';
-			
-			$updateChoices = $this->getUpdateOptions();
-			
-			// Create the HTML for the "existing account" option
-			$html .= '
-			<tr>
-				<td class="wm-label">
-					<input name="wpNameChoice" type="radio" value="existing" id="wpNameChoiceExisting"/>
-				</td>
-				<td class="mw-input">
-					<label for="wpNameChoiceExisting">' . wfMsg('facebook-chooseexisting') . '</label>
-					<div id="mw-facebook-choosename-update" class="fbInitialHidden">
-						<label for="wpExistingName">' . wfMsgHtml('facebook-chooseusername') . '</label>
-						<input name="wpExistingName" size="20" value="' . $name . '" id="wpExistingName" />&nbsp;
-						<label for="wpExistingPassword">' . wfMsgHtml('facebook-choosepassword') . '</label>
-						<input name="wpExistingPassword" size="20" value="" type="password" id="wpExistingPassword" /><br/>
-						' . $updateChoices . '
-					</div>
-				</td>
+		
+		// Grab the UserName from the cookie if it exists
+		global $wgCookiePrefix;
+		$name = isset($_COOKIE["{$wgCookiePrefix}UserName"]) ? trim($_COOKIE["{$wgCookiePrefix}UserName"]) : '';
+		
+		$updateChoices = $this->getUpdateOptions();
+		
+		// Create the HTML for the "existing account" option
+		$html .= '
+		<tr>
+			<td class="wm-label">
+				<input name="wpNameChoice" type="radio" value="existing" id="wpNameChoiceExisting"/>
+			</td>
+			<td class="mw-input">
+				<label for="wpNameChoiceExisting">' . wfMsg('facebook-chooseexisting') . '</label>
+				<div id="mw-facebook-choosename-update" class="fbInitialHidden">
+					<label for="wpExistingName">' . wfMsgHtml('facebook-chooseusername') . '</label>
+					<input name="wpExistingName" size="20" value="' . $name . '" id="wpExistingName" />&nbsp;
+					<label for="wpExistingPassword">' . wfMsgHtml('facebook-choosepassword') . '</label>
+					<input name="wpExistingPassword" size="20" value="" type="password" id="wpExistingPassword" /><br/>
+					' . $updateChoices . '
+				</div>
+			</td>
 			</tr>';
-		}
 		
 		// Add the options for nick name, first name and full name if we can get them
 		foreach (array('nick', 'first', 'full') as $option) {

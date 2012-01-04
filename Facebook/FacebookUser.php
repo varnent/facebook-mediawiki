@@ -267,20 +267,15 @@ class FacebookUser {
 			throw new FacebookUserException(null, null);
 		}
 		
-		global $wgFbDisableLogin;
-		if ( empty( $wgFbDisableLogin ) ) {
-			// These two permissions don't apply in $wgFbDisableLogin mode because
-			// then technically no users can create accounts
-			if ( $wgUser->isBlockedFromCreateAccount() ) {
-				wfDebug("Facebook: Blocked user was attempting to create account via Facebook Connect.\n");
-				throw new FacebookUserException('facebook-error', 'facebook-errortext');
-			} else {
-				$titleObj = SpecialPage::getTitleFor( 'Connect' );
-				$permErrors = $titleObj->getUserPermissionsErrors('createaccount', $wgUser, true);
-				if (count($permErrors) > 0) {
-					// Special case for permission errors
-					throw new FacebookUserException($permErrors, 'createaccount');
-				}
+		if ( $wgUser->isBlockedFromCreateAccount() ) {
+			wfDebug("Facebook: Blocked user was attempting to create account via Facebook Connect.\n");
+			throw new FacebookUserException('facebook-error', 'facebook-errortext');
+		} else {
+			$titleObj = SpecialPage::getTitleFor( 'Connect' );
+			$permErrors = $titleObj->getUserPermissionsErrors('createaccount', $wgUser, true);
+			if (count($permErrors) > 0) {
+				// Special case for permission errors
+				throw new FacebookUserException($permErrors, 'createaccount');
 			}
 		}
 		
