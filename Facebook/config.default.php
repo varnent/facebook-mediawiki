@@ -133,7 +133,7 @@ $wgFbScript = 'https://connect.facebook.net/%LOCALE%/all.js';
  *     facebook.min.js    Minified version for deployment
  */
 global $wgScriptPath;
-$wgFbExtensionScript = "$wgScriptPath/extensions/Facebook/facebook.js";
+$wgFbExtensionScript = "$wgScriptPath/extensions/Facebook/facebook.min.js";
 
 /**
  * Optionally override the default javascript handling which occurs when a user
