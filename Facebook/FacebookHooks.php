@@ -83,10 +83,6 @@ class FacebookHooks {
 	public static function BeforePageDisplay( &$out, &$sk ) {
 		global $wgUser, $wgVersion, $wgFbLogo, $wgFbScript, $wgFbExtensionScript, $wgJsMimeType, $wgStyleVersion;
 		
-		// Wikiaphone skin for mobile device doesn't need JS or CSS additions 
-		if ( get_class( $wgUser->getSkin() ) === 'SkinWikiaphone' )
-			return true;
-		
 		// Check to see if we should localize the JS SDK
 		if (strpos( $wgFbScript, FACEBOOK_LOCALE ) !== false) {
 			wfProfileIn( __METHOD__ . '::fb-locale-by-mediawiki-lang' );
@@ -241,14 +237,7 @@ STYLE;
 		}
 		$vars['fbAppId']     = $wgFbAppId;
 		$vars['fbUseXFBML']  = $wgFbSocialPlugins;
-		/*
-		$vars['fbLogoutURL'] = Skin::makeSpecialUrl( 'Userlogout',
-			$wgTitle->isSpecial('Preferences') ? '' : 'returnto=' . $wgTitle->getPrefixedURL() );
-		*/
-		$vals = $wgRequest->getValues();
-		if( !empty( $vals ) && !empty( $vals['title'] ) ) {
-			$vars['fbReturnToTitle'] = $vals['title'];
-		}
+		
 		// Let JavaScript know if the Facebook ID belongs to someone else
 		if ($wgUser->isLoggedIn() /*&& !$facebook->getUser()*/) { // TODO: uncomment
 			$ids = FacebookDB::getFacebookIDs($wgUser);
