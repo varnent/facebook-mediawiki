@@ -256,103 +256,28 @@ STYLE;
 	}
 	
 	/**
-	 * TODO: Document me!
-	 */
-	private static function showButton( $which ) {
-		global $wgUser, $wgFbShowPersonalUrls, $wgFbHidePersonalUrlsBySkin;
-		// If the button isn't marked to be shown in the first place
-		if (!in_array($which, $wgFbShowPersonalUrls)) {
-			return false;
-		}
-		$skinName = get_class($wgUser->getSkin());
-		// If no blacklist rules exist for the skin
-		if (!array_key_exists($skinName, $wgFbHidePersonalUrlsBySkin)) {
-			return true;
-		}
-		// If the value is a string, it's a simple comparison
-		if (is_string($wgFbHidePersonalUrlsBySkin[$skinName])) {
-			return $wgFbHidePersonalUrlsBySkin[$skinName] != '*' &&
-			       $wgFbHidePersonalUrlsBySkin[$skinName] != $which;
-		} else {
-			return !in_array($which, $wgFbHidePersonalUrlsBySkin[$skinName]) &&
-			       !in_array('*', $wgFbHidePersonalUrlsBySkin[$skinName]);
-		}
-	}
-	
-	/**
 	 * Modify the user's persinal toolbar (in the upper right).
-	 * 
-	 * TODO: Better 'returnto' code
 	 */
 	public static function PersonalUrls( &$personal_urls, &$wgTitle ) {
-		global $wgUser, $wgFbDisableLogin, $facebook;
+		global $wgUser, $wgFbDisableLogin;
 		
 		wfLoadExtensionMessages('Facebook');
 		
-		// Always false, as 'alt-talk' isn't a valid option currently
-		if (self::showButton( 'alt-talk' ) &&
-				array_key_exists('mytalk', $personal_urls)) {
-			unset($personal_urls['mytalk']);
+		// Add an option to connect via Facebook Connect
+		if ( !$wgUser->isLoggedIn() ) {
+			$personal_urls['facebook'] = array(
+				'text'   => wfMsg( 'facebook-connect' ),
+				'href'   => '#', # SpecialPage::getTitleFor('Connect')->getLocalUrl('returnto=' . $wgTitle->getPrefixedURL()),
+				'class' => 'mw-facebook-logo',
+				'active' => $wgTitle->isSpecial('Connect'),
+			);
 		}
 		
-		// If the user is logged in and connected
-		if ( $wgUser->isLoggedIn() && $facebook->getUser() &&
-				count( FacebookDB::getFacebookIDs($wgUser) ) > 0 ) {
-			if (self::showButton( 'logout' )) {
-				// Replace logout link with a button to disconnect from Facebook Connect
-				unset( $personal_urls['logout'] );
-				$personal_urls['fblogout'] = array(
-					'text'   => wfMsg( 'facebook-logout' ),
-					'href'   => '#',
-					'active' => false,
-				);
-				/*
-				$html = Xml::openElement('span', array('id' => 'fbuser' ));
-					$html .= Xml::openElement('a', array('href' => $personal_urls['userpage']['href'], 'class' => 'fb_usermenu_button' ));
-					$html .= Xml::closeElement( 'a' );
-				$html .= Xml::closeElement( 'span' );
-				$personal_urls['fbuser']['html'] = $html;
-				*/
-			}
-		}
-		// User is logged in but not Connected
-		else if ($wgUser->isLoggedIn()) {
-			if (self::showButton( 'convert' )) {
-				/*
-				$personal_urls['fbconvert'] = array(
-					'text'   => wfMsg( 'facebook-convert' ),
-					'href'   => SpecialConnect::getTitleFor('Connect', 'Convert')->getLocalURL(
-					                          'returnto=' . $wgTitle->getPrefixedURL()),
-					'class'  => 'mw-facebook-logo',
-					'active' => $wgTitle->isSpecial( 'Connect' ),
-				);
-				*/
-				$personal_urls['facebook'] = array(
-						'text'   => wfMsg( 'facebook-convert' ),
-						'href'   => '#',
-						'class'  => 'mw-facebook-logo',
-						'active' => $wgTitle->isSpecial( 'Connect' ),
-				);
-			}
-		}
-		// User is not logged in
-		else {
-			if (self::showButton( 'connect' )) {
-				// Add an option to connect via Facebook Connect
-				$personal_urls['facebook'] = array(
-					'text'   => wfMsg( 'facebook-connect' ),
-					'href'   => '#', # SpecialPage::getTitleFor('Connect')->getLocalUrl('returnto=' . $wgTitle->getPrefixedURL()),
-					'class' => 'mw-facebook-logo',
-					'active' => $wgTitle->isSpecial('Connect'),
-				);
-			}
-			
-			if ( !empty( $wgFbDisableLogin ) ) {
-				// Remove other personal toolbar links
-				foreach (array('login', 'anonlogin') as $k) {
-					if (array_key_exists($k, $personal_urls)) {
-						unset($personal_urls[$k]);
-					}
+		if ( !empty( $wgFbDisableLogin ) ) {
+			// Remove other personal toolbar links
+			foreach (array('login', 'anonlogin') as $k) {
+				if (array_key_exists($k, $personal_urls)) {
+					unset($personal_urls[$k]);
 				}
 			}
 		}

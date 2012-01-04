@@ -51,26 +51,6 @@ $wgFbDisableLogin = false;
 $wgFbSocialPlugins = true;
 
 /**
- * Options regarding the personal toolbar (in the upper right).
- */
-$wgFbShowPersonalUrls = array(
-	'connect',        // Show the "Log in with Facebook Connect" button
-#	'convert',        // Give logged-in users a link to Connect their accounts (not available)
-#	'logout',         // Log the user out of Facebook when they log out of the wiki
-);
-
-/**
- * The Personal Urls above can be blacklisted for specific skins. An asterisk
- * acts to match all Facebook-related buttons.
- */
-$wgFbHidePersonalUrlsBySkin = array(
-	'SkinMonaco' => array( 'connect', 'convert', 'logout' ),
-	'SkinAnswers' => array( 'convert', 'logout' ),
-	'SkinCorporate' => '*',
-	'SkinOasis' => array( 'connect', 'convert', 'logout' ),
-);
-
-/**
  * The Facebook icon. You can copy this image to your server if you want, or
  * set to false to disable.
  */
