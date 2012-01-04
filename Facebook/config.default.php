@@ -15,10 +15,6 @@
  * 
  * Optionally, you may customize your application:
  *    A.  Upload icon and logo images. The icon appears in Timeline events.
- *    B.  Create a Page for your app (if you don't already have one). Visit the
- *        settings, click Advanced, scroll to the bottom and click the buttom in
- *        the "App Page" field. This will create a new page for your app. Paste
- *        the Page ID for your app below.
  * 
  * It is recommended that, rather than changing the settings in this file, you
  * instead override them in LocalSettings.php by adding new settings after
@@ -26,7 +22,6 @@
  */
 $wgFbAppId          = 'YOUR_APP_ID';    # Change this!
 $wgFbSecret         = 'YOUR_SECRET';    # Change this!
-//$wgFbPageId       = 'YOUR_PAGE_ID';   # Optional
 
 /**
  * Allow the use of social plugins in wiki text. To learn more about social
