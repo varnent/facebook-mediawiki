@@ -51,8 +51,9 @@ class FacebookHooks {
 			$out->prependHTML('
 				<div id="fb-root"></div>
 <script type="' . $wgJsMimeType . '">
-(function(d){var js,id="facebook-jssdk";if(!d.getElementById(id)){js=d.createElement("script");js.id=id;js.async=true;js.type="' .
-	$wgJsMimeType . '";js.src="' . $wgFbScript . '";d.getElementsByTagName("head")[0].appendChild(js);}}(document));
+(function(d){var js,id="facebook-jssdk";if(!d.getElementById(id)){js=d.createElement("script");' .
+'js.id=id;js.async=true;js.type="' . $wgJsMimeType . '";js.src="' . $wgFbScript .
+'";d.getElementsByTagName("head")[0].appendChild(js);}}(document));
 </script>' . "\n"
 			);
 		}
@@ -75,12 +76,6 @@ STYLE;
 		
 		// Things get a little simpler in 1.16...
 		if ( version_compare( $wgVersion, '1.16', '>=' ) ) {
-			/*
-			// Add a pretty Facebook logo if $wgFbLogo is set
-			if ( !empty( $wgFbLogo) ) {
-				$out->addInlineStyle( $style );
-			}
-			*/
 			$out->addInlineStyle( $style );
 			// Include the common jQuery library (alias defaults to $j instead of $)
 			$out->includeJQuery();
@@ -89,12 +84,6 @@ STYLE;
 				$out->addScriptFile( $wgFbExtensionScript );
 			}
 		} else {
-			/*
-			// Add a pretty Facebook logo if $wgFbLogo is set
-			if ( !empty( $wgFbLogo) ) {
-				$out->addScript( '<style type="text/css">' . $style . '</style>' );
-			}
-			*/
 			$out->addScript( '<style type="text/css">' . $style . '</style>' );
 			// Include the most recent 1.7 version
 			$out->addScriptFile( 'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js' );
@@ -248,33 +237,6 @@ STYLE;
 				'class' => 'mw-facebook-logo',
 				'active' => $wgTitle->isSpecial('Connect'),
 			);
-		}
-		return true;
-	}
-	
-	/**
-	 * Adds the class "mw-userlink" to links belonging to Connect accounts on
-	 * the page Special:ListUsers.
-	 */
-	static function SpecialListusersFormatRow( &$item, $row ) {
-		global $fbSpecialUsers;
-		
-		// Only modify Facebook Connect users
-		if (empty( $fbSpecialUsers ) ||
-				!count(FacebookDB::getFacebookIDs(User::newFromName($row->user_name)))) {
-			return true;
-		}
-		
-		// Look to see if class="..." appears in the link
-		$regs = array();
-		preg_match( '/^([^>]*?)class=(["\'])([^"]*)\2(.*)/', $item, $regs );
-		if (count( $regs )) {
-			// If so, append " mw-userlink" to the end of the class list
-			$item = $regs[1] . "class=$regs[2]$regs[3] mw-userlink$regs[2]" . $regs[4];
-		} else {
-			// Otherwise, stick class="mw-userlink" into the link just before the '>'
-			preg_match( '/^([^>]*)(.*)/', $item, $regs );
-			$item = $regs[1] . ' class="mw-userlink"' . $regs[2];
 		}
 		return true;
 	}
