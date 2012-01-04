@@ -285,7 +285,7 @@ STYLE;
 	 * TODO: Better 'returnto' code
 	 */
 	public static function PersonalUrls( &$personal_urls, &$wgTitle ) {
-		global $wgUser, $wgFbUseRealName, $wgFbDisableLogin, $facebook;
+		global $wgUser, $wgFbDisableLogin, $facebook;
 		
 		wfLoadExtensionMessages('Facebook');
 		
@@ -298,25 +298,6 @@ STYLE;
 		// If the user is logged in and connected
 		if ( $wgUser->isLoggedIn() && $facebook->getUser() &&
 				count( FacebookDB::getFacebookIDs($wgUser) ) > 0 ) {
-			if ( !empty( $wgFbUseRealName ) ) {
-				// Start with the real name in the database
-				$name = $wgUser->getRealName();
-				if (!$name || $name == '') {
-					// Ask Facebook for the real name
-					try {
-						// This might fail if we load a stale session from cookies
-						$fbUser = $facebook->api('/me');
-						$name = $fbUser['name'];
-					} catch (FacebookApiException $e) {
-						error_log($e);
-					}
-				}
-				// Make sure we were able to get a name from the database or Facebook
-				if ($name && $name != '') {
-					$personal_urls['userpage']['text'] = $name;
-				}
-			}
-			
 			if (self::showButton( 'logout' )) {
 				// Replace logout link with a button to disconnect from Facebook Connect
 				unset( $personal_urls['logout'] );

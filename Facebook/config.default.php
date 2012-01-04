@@ -51,11 +51,6 @@ $wgFbDisableLogin = false;
 $wgFbSocialPlugins = true;
 
 /**
- * Shows the real name for all Facebook users instead of their wiki user name.
- */
-$wgFbUseRealName = false;
-
-/**
  * Options regarding the personal toolbar (in the upper right).
  */
 $wgFbShowPersonalUrls = array(
