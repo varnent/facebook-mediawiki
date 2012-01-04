@@ -42,38 +42,6 @@ $wgFbSecret         = 'YOUR_SECRET';    # Change this!
 $wgFbDisableLogin = false;
 
 /**
- * For easier wiki rights management, create a group on Facebook and place the
- * group ID here. The "user_groups" right will automatically be requested from
- * users.
- * 
- * Two new implicit groups will be created:
- * 
- *     fb-groupie    A member of the specified group
- *     fb-admin      An administrator of the Facebook group
- * 
- * By default, they map to User and Sysop privileges. Users will automatically
- * be promoted or demoted when their membership or admin status is modified
- * from the group page within Facebook. Unfortunately, this has a minor
- * degredation on performance.
- * 
- * This setting can also be used in conjunction with $wgFbDisableLogin. To have
- * this group exclusively control access to the wiki, set $wgFbDisableLogin
- * to true and add the following settings to Localsettings.php:
- * 
- * # Disable reading and editing by anonymous users
- * $wgGroupPermissions['*']['edit'] = false;
- * $wgGroupPermissions['*']['read'] = false;
- * 
- * # Reserve normal wiki browsing for only Facebook group members (and admins)
- * $wgGroupPermissions['sysop'] = array_merge($wgGroupPermissions['sysop'], $wgGroupPermissions['user']);
- * $wgGroupPermissions['user'] = $wgGroupPermissions['fb-user'] = $wgGroupPermissions['*'];
- * 
- * # But allow all users to read these pages:
- * $wgWhitelistRead = array('-', 'Special:Connect', 'Special:UserLogin', 'Special:UserLogout');
- */
-$wgFbUserRightsFromGroup = false;  # Or a group ID
-
-/**
  * Allow the use of social plugins in wiki text. To learn more about social
  * plugins, please see <https://developers.facebook.com/docs/plugins>.
  * 

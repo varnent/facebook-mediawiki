@@ -95,15 +95,6 @@ $wgAutoloadClasses['ChooseNameTemplate'] = $dir . 'templates/ChooseNameTemplate.
 
 $wgSpecialPages['Connect'] = 'SpecialConnect';
 
-// Define new autopromote condition (use quoted text, numbers can cause collisions)
-define( 'APCOND_FB_INGROUP',   'fb*g' );
-define( 'APCOND_FB_ISADMIN',   'fb*a' );
-
-// rt#68127 - Giving basic permissions to other groups might open security holes
-// See <http://trac.wikia-code.com/changeset/27160> and <http://trac.wikia-code.com/changeset/27928> for fix
-$wgGroupPermissions['fb-user'] = $wgGroupPermissions['user']; // Create a new group for Facebook users
-$wgImplicitGroups[] = 'fb-user'; // Because Wikia says it should be
-
 //$wgAjaxExportList[] = 'FacebookInit::disconnectFromFB';
 //$wgAjaxExportList[] = 'SpecialConnect::getLoginButtonModal';
 //$wgAjaxExportList[] = 'SpecialConnect::ajaxModalChooseName'; 

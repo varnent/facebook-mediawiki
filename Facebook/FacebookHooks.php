@@ -50,34 +50,6 @@ class FacebookHooks {
 	}
 	
 	/**
-	 * Checks the autopromote condition for a user.
-	 */
-	static function AutopromoteCondition( $cond_type, $args, $user, &$result ) {
-		global $wgFbUserRightsFromGroup;
-		
-		// Probably a redundant check, but with PHP you can never be too sure...
-		if (empty($wgFbUserRightsFromGroup)) {
-			// No group to pull rights from, so the user can't be a member
-			$result = false;
-			return true;
-		}
-		$types = array(
-			APCOND_FB_INGROUP   => 'member',
-			APCOND_FB_ISADMIN   => 'admin'
-		);
-		$type = $types[$cond_type];
-		switch( $type ) {
-			case 'member':
-			case 'admin':
-				global $facebook;
-				// Connect to the Facebook API and ask if the user is in the group
-				$rights = $facebook->getGroupRights($user);
-				$result = $rights[$type];
-		}
-		return true;
-	}
-	
-	/**
 	 * Injects some important CSS and Javascript into the <head> of the page.
 	 */
 	public static function BeforePageDisplay( &$out, &$sk ) {
@@ -471,46 +443,6 @@ STYLE;
 			preg_match( '/^([^>]*)(.*)/', $item, $regs );
 			$item = $regs[1] . ' class="mw-userlink"' . $regs[2];
 		}
-		return true;
-	}
-	
-	/**
-	 * Adds some info about the governing Facebook group to the header form of
-	 * Special:ListUsers.
-	 */
-	// r274: Fix error with PHP 5.3 involving parameter references (thanks, PChott)
-	static function SpecialListusersHeaderForm( $pager, &$out ) {
-		global $wgFbUserRightsFromGroup, $facebook;
-		
-		if ( empty($wgFbUserRightsFromGroup) ) {
-			return true;
-		}
-		
-		// TODO: Do we need to verify the Facebook session here?
-		
-		$gid = $wgFbUserRightsFromGroup;
-		// Connect to the API and get some info about the group
-		try {
-			$group = $facebook->api('/' . $gid);
-		} catch (FacebookApiException $e) {
-			error_log($e);
-			return true;
-		}
-		$out .= '
-			<table style="border-collapse: collapse;">
-				<tr>
-					<td>
-						' . wfMsgWikiHtml( 'facebook-listusers-header',
-						wfMsg( 'group-bureaucrat-member' ), wfMsg( 'group-sysop-member' ),
-						"<a href=\"http://www.facebook.com/group.php?gid=$gid\">$group[name]</a>",
-						"<a href=\"http://www.facebook.com/profile.php?id={$group['owner']['id']}\" " .
-						"class=\"mw-userlink\">{$group['owner']['name']}</a>") . "
-					</td>
-	        		<td>
-	        			<img src=\"https://graph.facebook.com/$gid/picture?type=large\" title=\"$group[name]\" alt=\"$group[name]\">
-	        		</td>
-	        	</tr>
-	        </table>";
 		return true;
 	}
 	

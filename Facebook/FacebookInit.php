@@ -27,7 +27,7 @@ class FacebookInit {
 	 */
 	public static function init() {
 		global $wgXhtmlNamespaces, $wgSharedTables, $facebook, $wgHooks,
-		       $wgFbHooksToAddImmediately, $wgFbUserRightsFromGroup;
+		       $wgFbHooksToAddImmediately;
 		
 		// The xmlns:fb attribute is required for proper rendering on IE
 		$wgXhtmlNamespaces['fb'] = 'http://www.facebook.com/2008/fbml';
@@ -50,18 +50,6 @@ class FacebookInit {
 		global $wgDefaultUserOptions;
 		foreach (FacebookUser::$availableUserUpdateOptions as $option) {
 			$wgDefaultUserOptions["facebook-update-on-login-$option"] = 1;
-		}
-		
-		// If we are configured to pull group info from Facebook, then set up
-		// the group permissions here
-		if ( !empty( $wgFbUserRightsFromGroup ) ) {
-			global $wgGroupPermissions, $wgImplicitGroups, $wgAutopromote;
-			$wgGroupPermissions['fb-groupie'] = $wgGroupPermissions['user'];
-			$wgGroupPermissions['fb-admin'] = $wgGroupPermissions['sysop'];
-			$wgImplicitGroups[] = 'fb-groupie';
-			$wgImplicitGroups[] = 'fb-admin';
-			$wgAutopromote['fb-groupie'] = APCOND_FB_INGROUP;
-			$wgAutopromote['fb-admin']   = APCOND_FB_ISADMIN;
 		}
 	}
 	
