@@ -405,7 +405,6 @@ class SpecialConnect extends SpecialPage {
 		}
 		// TODO: bring back:
 		//     FacebookInit::getPermissionsAttribute()
-		//     FacebookInit::getOnLoginAttribute()
 		$html .= '<fb:login-button show-faces="true" width="' . $loginFormWidth .
 					'" max-rows="3" scope="email"></fb:login-button><br/><br/><br/>' . "\n";
 		

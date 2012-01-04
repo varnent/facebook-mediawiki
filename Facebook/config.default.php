@@ -134,13 +134,3 @@ $wgFbScript = 'https://connect.facebook.net/%LOCALE%/all.js';
  */
 global $wgScriptPath;
 $wgFbExtensionScript = "$wgScriptPath/extensions/Facebook/facebook.min.js";
-
-/**
- * Optionally override the default javascript handling which occurs when a user
- * logs in. This will generally not be needed unless you are doing heavy
- * customization of this extension.
- *
- * NOTE: This will be put inside of double-quotes, so any single-quotes should
- * be used inside of any JavaScript in this variable.
- */
-#$wgFbOnLoginJsOverride = 'sendToConnectOnLogin();';
