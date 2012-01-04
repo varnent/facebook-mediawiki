@@ -91,13 +91,3 @@ $wgAutoloadClasses['FacebookXFBML'] = $dir . 'FacebookXFBML.php';
 $wgAutoloadClasses['SpecialConnect'] = $dir . 'SpecialConnect.php';
 
 $wgSpecialPages['Connect'] = 'SpecialConnect';
-
-//$wgAjaxExportList[] = 'SpecialConnect::getLoginButtonModal';
-//$wgAjaxExportList[] = 'SpecialConnect::ajaxModalChooseName'; 
-//$wgAjaxExportList[] = 'SpecialConnect::checkCreateAccount';
-
-// These hooks need to be hooked up prior to init() because runhooks may be called for them before init is run.
-$wgFbHooksToAddImmediately = array( 'SpecialPage_initList' );
-foreach( $wgFbHooksToAddImmediately as $hookName ) {
-	$wgHooks[$hookName][] = "FacebookHooks::$hookName";
-}
