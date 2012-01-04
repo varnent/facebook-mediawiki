@@ -26,8 +26,7 @@ class FacebookInit {
 	 * Initializes and configures the extension.
 	 */
 	public static function init() {
-		global $wgXhtmlNamespaces, $wgSharedTables, $facebook, $wgHooks,
-		       $wgFbHooksToAddImmediately;
+		global $wgXhtmlNamespaces, $wgSharedTables, $facebook, $wgHooks;
 		
 		// The xmlns:fb attribute is required for proper rendering on IE
 		$wgXhtmlNamespaces['fb'] = 'http://www.facebook.com/2008/fbml';
@@ -41,9 +40,7 @@ class FacebookInit {
 		// Install all public static functions in class FacebookHooks as MediaWiki hooks
 		$hooks = self::enumMethods( 'FacebookHooks' );
 		foreach( $hooks as $hookName ) {
-			if (!in_array( $hookName, $wgFbHooksToAddImmediately )) {
-				$wgHooks[$hookName][] = "FacebookHooks::$hookName";
-			}
+			$wgHooks[$hookName][] = "FacebookHooks::$hookName";
 		}
 		
 		// Default to pull new info from Facebook
