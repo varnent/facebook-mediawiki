@@ -855,20 +855,6 @@ class SpecialConnect extends SpecialPage {
 		$fb_id = $facebook->getUser();
 		FacebookDB::addFacebookID($wgUser, $fb_id);
 		
-		// Save the default user preferences.
-		global $wgFbEnablePushToFacebook;
-		if (!empty( $wgFbEnablePushToFacebook )) {
-			global $wgFbPushEventClasses;
-			if (!empty( $wgFbPushEventClasses )) {
-				$DEFAULT_ENABLE_ALL_PUSHES = true;
-				foreach($wgFbPushEventClasses as $pushEventClassName) {
-					$pushObj = new $pushEventClassName;
-					$prefName = $pushObj->getUserPreferenceName();
-					
-					$wgUser->setOption($prefName, $DEFAULT_ENABLE_ALL_PUSHES ? '1' : '0');
-				}
-			}
-		}
 		$wgUser->setOption('fbFromExist', '1');
 		$wgUser->saveSettings();
 		

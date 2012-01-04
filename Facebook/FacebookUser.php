@@ -409,24 +409,6 @@ class FacebookUser {
 			$this->user->setOption("facebook-update-on-login-$option", 1);
 		}
 		
-		// Process the FacebookPushEvent preference checkboxes if Push Events are enabled
-		global $wgFbEnablePushToFacebook, $wgRequest;
-		if( !empty( $wgFbEnablePushToFacebook ) ) {
-			global $wgFbPushEventClasses;
-			if ( !empty( $wgFbPushEventClasses ) ) {
-				foreach( $wgFbPushEventClasses as $pushEventClassName ) {
-					$pushObj = new $pushEventClassName;
-					$className = get_class();
-					$prefName = $pushObj->getUserPreferenceName();
-					$this->user->setOption($prefName, ($wgRequest->getCheck($prefName) ? '1' : '0'));
-				}
-			}
-	
-			// Save the preference for letting user select to never send anything to their newsfeed
-			$prefName = FacebookPushEvent::$PREF_TO_DISABLE_ALL;
-			$this->user->setOption($prefName, $wgRequest->getCheck($prefName) ? '1' : '0');
-		}
-		
 		// Default to automatically login Facebook users
 		$this->user->setOption( 'rememberpassword', 1 ); 
 		//$this->user->setOption( 'skinoverwrite', 1 ); // Wikia code
